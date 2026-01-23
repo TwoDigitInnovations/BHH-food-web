@@ -23,9 +23,7 @@ function App({ Component, pageProps }) {
   const [Favorite, setFavorite] = useState([]);
   const [lang, setLang] = useState("vi");
 
-  // ✅ useTranslation hook (removed unused destructuring)
 
-  // ✅ getUserdetail with window guard
   const getUserdetail = () => {
     if (typeof window === "undefined") return;
 
@@ -42,7 +40,7 @@ function App({ Component, pageProps }) {
     if (storedLang) setLang(storedLang);
   };
 
-  // ✅ Refresh user profile from server
+
   const refreshUserProfile = async () => {
     if (typeof window === "undefined" || !user?._id) return;
 
@@ -50,7 +48,7 @@ function App({ Component, pageProps }) {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/v1/api/getProfile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.bhhfood.com'}/v1/api/getProfile`, {
         method: 'GET',
         headers: {
           'Authorization': `jwt ${token}`,
