@@ -16,17 +16,14 @@ export const favoriteProductContext = createContext();
 export const languageContext = createContext();
 
 function App({ Component, pageProps }) {
-  const router = useRouter();
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState();
   const [openCart, setOpenCart] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
   const [lang, setLang] = useState("vi");
 
-  // ✅ useTranslation ek hi baar call karo
-  const { t, i18n } = useTranslation();
+  // ✅ useTranslation hook (removed unused destructuring)
 
   // ✅ getUserdetail with window guard
   const getUserdetail = () => {
@@ -115,7 +112,6 @@ function App({ Component, pageProps }) {
               <favoriteProductContext.Provider value={[Favorite, setFavorite]}>
                 <Layout
                   loader={setOpen}
-                  constant={data}
                   toaster={(t) => {
                     if (t.type === "error") toast.error(t.message);
                     else if (t.type === "success") toast.success(t.message);

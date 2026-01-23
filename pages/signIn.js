@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import Swal from "sweetalert2";
 const SignIn = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -43,25 +44,33 @@ const SignIn = (props) => {
             return;
           }
 
-          // Proceed with login
+          // Check if document verification is false - prevent login
+          if (userData.documentVerified === false) {
+            Swal.fire({
+              title: t("Account Under Verification"),
+              text: t("Your account is under verification. You will receive a confirmation email once you are verified. Please wait for approval."),
+              icon: "warning",
+              confirmButtonText: t("OK"),
+              confirmButtonColor: "#2e7d32",
+              customClass: {
+                confirmButton: "px-8 py-2 rounded-lg",
+              },
+              width: "500px",
+            });
+            return; // Don't proceed with login
+          }
+
+          // Proceed with login only if document is verified
           router.push("/");
           localStorage.setItem("userDetail", JSON.stringify(userData));
           localStorage.setItem("token", userData.token);
           setUser(userData);
           setUserDetail({ email: "", password: "" });
 
-          // Check if document verification is pending
-          if (userData.documentVerified === false) {
-            props.toaster({
-              type: "info",
-              message: t("When your verification gets approved, you can view product prices and make purchases"),
-            });
-          } else {
-            props.toaster({
-              type: "success",
-              message: t("You are successfully logged in"),
-            });
-          }
+          props.toaster({
+            type: "success",
+            message: t("You are successfully logged in"),
+          });
         } else {
           props.toaster({ type: "error", message: res?.data?.message });
         }
@@ -129,9 +138,19 @@ const SignIn = (props) => {
               onSubmit={submit}
               className="bg-white rounded-[22px] md:px-12 px-5 md:py-0 py-6 flex flex-col justify-center items-start col-span-2 border-[1px] border-[#2E7D3240] "
             >
-              <h3 className="text-black md:text-[48px] text-[20px] font-bold md:mb-10 mb-8 mt-4">
+              <h3 className="text-black md:text-[48px] text-[20px] font-bold mt-4">
                 {t("Sign in")}
               </h3>
+              
+              <div className="flex justify-start md:mb-10 mb-8 mt-2">
+                <button
+                  type="button"
+                  onClick={() => router.push("/signUp")}
+                  className="px-4 py-2 text-sm font-medium rounded-lg text-white bg-custom-green focus:outline-none cursor-pointer hover:bg-green-700 transition-colors duration-300"
+                >
+                  {t("Become a Customer")}
+                </button>
+              </div>
 
               <div className="relative flex items-center  md:mb-14 mb-8 w-full md:w-[80%]">
                 <label className="text-gray-800 text-[16px] md:text-[18px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">

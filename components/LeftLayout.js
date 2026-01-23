@@ -7,11 +7,13 @@ import { useTranslation } from "react-i18next";
 const LeftLayout = (props) => {
     const [isLanguage, setIsLanguage] = useState(false);
     const [searchData, setSearchData] = useState("");
+    const [isClient, setIsClient] = useState(false);
     const { lang, changeLang } = useContext(languageContext);
     const { i18n, t } = useTranslation();
     const router = useRouter();
 
     useEffect(() => {
+        setIsClient(true);
         i18n.changeLanguage(lang);
     }, [lang]);
 
@@ -52,7 +54,7 @@ const LeftLayout = (props) => {
                                 type="text"
                                 value={searchData}
                                 onChange={(e) => setSearchData(e.target.value)}
-                                placeholder={t("Search")}
+                                placeholder={isClient ? t("Search") : "Search"}
                                 className="w-full bg-transparent text-black text-sm px-3 outline-none placeholder:text-gray-400"
                             />
                         </form>
@@ -72,7 +74,7 @@ const LeftLayout = (props) => {
 
               
                 <div className="flex items-center gap-3 pl-6">
-                    <span className="text-md text-gray-600"> {t("Select Language")}:</span>
+                    <span className="text-md text-gray-600">{isClient ? t("Select Language") : "Select Language"}:</span>
                     <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300 gap-2">
                          <button
                             onClick={() => handleClick("vi")}

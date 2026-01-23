@@ -19,6 +19,11 @@ const SignUp = (props) => {
     number: "",
     password: "",
     document: null,
+    businessType: "",
+    legalBusinessName: "",
+    resellerPermit: null,
+    paymentMethod: false,
+    termsAgreement: false,
   });
   const [user] = useContext(userContext);
   const [eyeIcon, setEyeIcon] = useState(false);
@@ -63,6 +68,21 @@ const SignUp = (props) => {
       case "document":
         if (!value) return "Document verification is required";
         return "";
+      case "businessType":
+        if (!value) return "Business type is required";
+        return "";
+      case "legalBusinessName":
+        // Optional field, no validation needed
+        return "";
+      case "resellerPermit":
+        // Optional field, no validation needed
+        return "";
+      case "paymentMethod":
+        if (!value) return "Payment method selection is required";
+        return "";
+      case "termsAgreement":
+        if (!value) return "You must agree to terms and conditions";
+        return "";
       default:
         return "";
     }
@@ -71,8 +91,8 @@ const SignUp = (props) => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    // Handle file upload for document
-    if (name === "document") {
+    // Handle file upload for document and resellerPermit
+    if (name === "document" || name === "resellerPermit") {
       const file = files[0];
       if (file) {
         // Check file type (only PDF, JPG, PNG allowed)
@@ -115,6 +135,20 @@ const SignUp = (props) => {
       return;
     }
 
+    // Handle checkbox for payment method and terms agreement
+    if (name === "paymentMethod" || name === "termsAgreement") {
+      setUserDetail({
+        ...userDetail,
+        [name]: e.target.checked,
+      });
+      // Clear error when user checks the box
+      setErrors({
+        ...errors,
+        [name]: "",
+      });
+      return;
+    }
+
     setUserDetail({
       ...userDetail,
       [name]: value,
@@ -132,7 +166,7 @@ const SignUp = (props) => {
     let fieldValue = value;
     
     // For file input, check if file is selected
-    if (name === "document") {
+    if (name === "document" || name === "resellerPermit") {
       fieldValue = files && files[0] ? files[0] : null;
       const error = validateField(name, fieldValue);
       setErrors({
@@ -156,8 +190,8 @@ const SignUp = (props) => {
     let formValid = true;
     const newErrors = {};
 
-    // Validate all required fields including document
-    const requiredFields = ['name', 'lastname', 'email', 'number', 'password', 'document'];
+    // Validate all required fields including document, businessType, paymentMethod and termsAgreement
+    const requiredFields = ['name', 'lastname', 'email', 'number', 'password', 'document', 'businessType', 'paymentMethod', 'termsAgreement'];
     
     requiredFields.forEach((key) => {
       let fieldValue = userDetail[key];
@@ -196,6 +230,17 @@ const SignUp = (props) => {
     // Add document (now required)
     if (userDetail.document) {
       formData.append('document', userDetail.document);
+    }
+
+    // Add new fields
+    formData.append('businessType', userDetail.businessType);
+    formData.append('paymentMethod', userDetail.paymentMethod);
+    formData.append('termsAgreement', userDetail.termsAgreement);
+    if (userDetail.legalBusinessName) {
+      formData.append('legalBusinessName', userDetail.legalBusinessName);
+    }
+    if (userDetail.resellerPermit) {
+      formData.append('resellerPermit', userDetail.resellerPermit);
     }
 
     Api("post", "signUp", formData, router).then(
@@ -262,10 +307,10 @@ const SignUp = (props) => {
               onSubmit={submitSignUp}
             >
               <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center mb-6">
-                {t("Sign up")}
+                {t("Application")}
               </h3>
 
-              <div className="relative flex items-center w-full md:w-[80%] mb-9 md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
                   {t("First Name")}
                 </label>
@@ -285,7 +330,7 @@ const SignUp = (props) => {
                   </p>
                 )}
               </div>
-              <div className="relative flex items-center w-full md:w-[80%] mb-9 md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
                   {t("Last Name")}
                 </label>
@@ -306,7 +351,7 @@ const SignUp = (props) => {
                 )}
               </div>
 
-              <div className="relative flex items-center w-full md:w-[80%] mb-9 md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 text-[14px] md:text-[18px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">
                   {t("Email")}
                 </label>
@@ -327,7 +372,7 @@ const SignUp = (props) => {
                 )}
               </div>
 
-              <div className="relative flex items-center w-full md:w-[80%] mb-9 md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
                   {t("Mobile Number")}
                 </label>
@@ -349,7 +394,7 @@ const SignUp = (props) => {
                 )}
               </div>
 
-              <div className="relative flex items-center w-full md:w-[80%] md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
                   {t("Password")}
                 </label>
@@ -380,7 +425,7 @@ const SignUp = (props) => {
                 )}
               </div>
 
-              <div className="relative flex items-center w-full md:w-[80%] mb-9 md:mb-6">
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
                 <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px] z-10">
                   Document Verification *
                 </label>
@@ -411,23 +456,150 @@ const SignUp = (props) => {
                     {errors.document}
                   </p>
                 )}
-                <p className="absolute bottom-[-40px] left-0 text-gray-500 text-xs">
+                {/* <p className="absolute bottom-[-40px] left-0 text-gray-500 text-xs">
                   Upload business license, tax ID, or trade certificate (PDF, JPG, PNG - Max 5MB) - Required
+                </p> */}
+              </div>
+
+              {/* Business Type Dropdown */}
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
+                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px] z-10">
+                  {t("Business Type")} *
+                </label>
+                <select
+                  name="businessType"
+                  value={userDetail.businessType}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                  required
+                >
+                  <option value="">{t("Select Business Type")}</option>
+                  <option value="wholesale">{t("Wholesale")}</option>
+                  <option value="retail">{t("Retail")}</option>
+                  <option value="foodservice">{t("Food Service")}</option>
+                </select>
+                {errors.businessType && (
+                  <p className="absolute bottom-[-20px] left-0 text-red-500 text-xs">
+                    {errors.businessType}
+                  </p>
+                )}
+              </div>
+
+              {/* Legal Business Name - Optional */}
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
+                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                  {t("Legal Business Name")} (Optional)
+                </label>
+                <input
+                  type="text"
+                  name="legalBusinessName"
+                  placeholder={t("Enter Legal Business Name")}
+                  value={userDetail.legalBusinessName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                />
+                {errors.legalBusinessName && (
+                  <p className="absolute bottom-[-20px] left-0 text-red-500 text-xs">
+                    {errors.legalBusinessName}
+                  </p>
+                )}
+              </div>
+
+              {/* Reseller Permit Upload - Optional */}
+              <div className="relative flex items-center w-full md:w-[80%] mb-6 md:mb-5">
+                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px] z-10">
+                  {t("Reseller Permit Upload")} (Optional)
+                </label>
+                <div className="relative w-full">
+                  <input
+                    type="file"
+                    name="resellerPermit"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  />
+                  <div className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl flex items-center justify-between">
+                    <span className="text-[14px] md:text-[16px] text-gray-500">
+                      {userDetail.resellerPermit ? userDetail.resellerPermit.name : "No file chosen"}
+                    </span>
+                    <button
+                      type="button"
+                      className="ml-4 py-2 px-4 rounded-full border-0 text-sm font-semibold bg-custom-green text-white cursor-pointer hover:bg-green-700"
+                    >
+                      Choose File
+                    </button>
+                  </div>
+                </div>
+                {errors.resellerPermit && (
+                  <p className="absolute bottom-[-20px] left-0 text-red-500 text-xs">
+                    {errors.resellerPermit}
+                  </p>
+                )}
+                <p className="absolute bottom-[-40px] left-0 text-gray-500 text-xs">
+                  Upload reseller permit or tax exemption certificate (PDF, JPG, PNG - Max 5MB) - Optional
                 </p>
               </div>
 
-              <div className="mt-8 w-full md:w-[80%]">
-                <p className="text-[#A7A9AA] text-center md:w-[62%] py-1.5 mx-auto text-[14px]">{t("By Clicking Sign up you agree with our")} <span className="cursor-pointer font-bold text-gray-800"
-                  onClick={() => router.push("/Termsandcondition")}
-                >{t("Terms and Conditions")}</span> {t("and")} <span
-                  className="cursor-pointer font-bold text-gray-800"
-                  onClick={() => router.push("/PrivacyPolicy")}
-                > {t("Privacy Policy")}</span></p>
+              {/* Payment Method Checkbox */}
+              <div className="relative w-full md:w-[80%] mb-6 md:mb-5 bg-white p-4 border-2 border-gray-200 rounded-xl">
+                <div className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    name="paymentMethod"
+                    checked={userDetail.paymentMethod}
+                    onChange={handleChange}
+                    className="mt-1 w-5 h-5 text-custom-green bg-white border-2 border-gray-300 rounded focus:ring-custom-green focus:ring-2 flex-shrink-0"
+                    required
+                  />
+                  <div className="flex flex-col flex-1">
+                    <label className="text-gray-800 text-[14px] md:text-[16px] font-medium mb-2 leading-tight">
+                      {t("How will you pay for goods?")} *
+                    </label>
+                    <span className="text-gray-600 text-[12px] md:text-[14px] leading-relaxed">
+                      {t("At time of service (Cash, Credit Card, Check)")}
+                    </span>
+                  </div>
+                </div>
+                {errors.paymentMethod && (
+                  <p className="mt-2 text-red-500 text-xs">
+                    {errors.paymentMethod}
+                  </p>
+                )}
+              </div>
+
+              <div className="w-full md:w-[80%]">
+                {/* Terms Agreement Checkbox */}
+                <div className="relative w-full mb-6 md:mb-5 bg-white p-4 border-2 border-gray-200 rounded-xl">
+                  <div className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      name="termsAgreement"
+                      checked={userDetail.termsAgreement}
+                      onChange={handleChange}
+                      className="mt-1 w-5 h-5 text-custom-green bg-white border-2 border-gray-300 rounded focus:ring-custom-green focus:ring-2 flex-shrink-0"
+                      required
+                    />
+                    <div className="flex flex-col flex-1">
+                      <span className="text-gray-800 text-[12px] md:text-[14px] leading-relaxed">
+                        {t("By clicking Submit you agree with our Terms and Conditions and Privacy Policy. Prepayment required. No net terms offered.")}
+                      </span>
+                    </div>
+                  </div>
+                  {errors.termsAgreement && (
+                    <p className="mt-2 text-red-500 text-xs">
+                      {errors.termsAgreement}
+                    </p>
+                  )}
+                </div>
+                
                 <button
                   type="submit"
                   className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
                 >
-                  {t("Sign up")}
+                  {t("Submit")}
                 </button>
               </div>
 

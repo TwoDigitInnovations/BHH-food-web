@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,6 +14,7 @@ import Drawer from "@mui/material/Drawer";
 import { useTranslation } from "react-i18next";
 import Head from "next/head";
 import { Filter } from "lucide-react";
+import { userContext } from "../_app";
 
 const sortByData = [
   {
@@ -53,6 +54,7 @@ const sortByData = [
 function Categories(props) {
   const router = useRouter();
   const { t } = useTranslation();
+  const [user] = useContext(userContext);
   const [productList, SetProductList] = useState([]);
   const [category, setCategory] = useState({});
   const [categoryList, SetCategoryList] = useState([]);
@@ -62,6 +64,17 @@ function Categories(props) {
   const [openCategory, setOpenCategory] = useState(false);
   const [open, setOpen] = useState(false);
   const topRef = useRef(null);
+
+  // Authentication check
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      const hasAuth = user?._id || user?.token || token;
+      setIsAuthenticated(!!hasAuth);
+    }
+  }, [user]);
 
   // Infinite scroll states
   const [isFetching, setIsFetching] = useState(false);
@@ -331,23 +344,37 @@ function Categories(props) {
 
             <div className="md:mt-0 mt-2">
               <div className="grid lg:grid-cols-4 xl:grid-cols-4 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
-                {productList.length > 0 ? (
-                  productList.map((item, i) => (
-                    <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">
-                      <GroceryCatories
-                        loader={props.loader}
-                        toaster={props.toaster}
-                        item={item}
-                        i={i}
-                        url={`/product-details/${item?.slug}`}
-                      />
+                {isAuthenticated ? (
+                  productList.length > 0 ? (
+                    productList.map((item, i) => (
+                      <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">
+                        <GroceryCatories
+                          loader={props.loader}
+                          toaster={props.toaster}
+                          item={item}
+                          i={i}
+                          url={`/product-details/${item?.slug}`}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex justify-center items-center h-[500px] md:h-[600px] col-span-6">
+                      <p className="text-black text-center font-semibold text-xl">
+                        {t("No products available in this category")}.
+                      </p>
                     </div>
-                  ))
+                  )
                 ) : (
-                  <div className="flex justify-center items-center h-[500px] md:h-[600px] col-span-6">
-                    <p className="text-black text-center font-semibold text-xl">
-                      {t("No products available in this category")}.
-                    </p>
+                  <div className="flex flex-col items-center justify-center h-[500px] md:h-[600px] col-span-6 space-y-4">
+                    <div className="text-gray-500 text-lg text-center">
+                      {t("Please sign in to view products")}
+                    </div>
+                    <button
+                      onClick={() => router.push("/signIn")}
+                      className="px-6 py-3 bg-custom-green text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      {t("Sign In")}
+                    </button>
                   </div>
                 )}
               </div>

@@ -14,7 +14,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="py-10 bg-custom-lightGreen text-black font-sans rounded-tl-[50px] rounded-tr-[50px] "
+      className="py-10 bg-orange-200 text-black font-sans rounded-tl-[50px] rounded-tr-[50px] "
       role="contentinfo"
       aria-label="Website Footer"
     >
@@ -177,7 +177,7 @@ const Footer = () => {
           </div>
 
           {/* App Store Buttons */}
-          <div className="flex flex-row items-center justify-center gap-3 md:mb-0 mb-10">
+          {/* <div className="flex flex-row items-center justify-center gap-3 md:mb-0 mb-10">
             <a
               href="https://apps.apple.com/us/app/b%C3%A1ch-ho%C3%A1-houston/id6745395289"
               target="_blank"
@@ -224,7 +224,7 @@ const Footer = () => {
                 />
               </div>
             </a>
-          </div>
+          </div> */}
 
         </div>
       </div>

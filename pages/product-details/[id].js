@@ -31,6 +31,8 @@ function ProductDetails(props) {
   const { lang } = useContext(languageContext);
   const [user, setUser] = useContext(userContext);
 
+  // All state declarations first
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [productsId, setProductsId] = useState({});
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedImageList, setSelectedImageList] = useState([]);
@@ -46,6 +48,21 @@ function ProductDetails(props) {
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
 
+  // Authentication check effect
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      const hasAuth = user?._id || user?.token || token;
+      setIsAuthenticated(!!hasAuth);
+      
+      // Redirect to signIn if not authenticated
+      if (!hasAuth) {
+        router.replace("/signIn");
+        return;
+      }
+    }
+  }, [user, router]);
+
   useEffect(() => {
     if (props?.notFoundProduct) {
       props?.toaster({
@@ -56,7 +73,6 @@ function ProductDetails(props) {
     }
   }, [props?.notFoundProduct]);
 
-  
   useEffect(() => {
     if (!props?.product) return;
     setProductsId(props.product);
@@ -71,6 +87,98 @@ function ProductDetails(props) {
     setPriceIndex(0);
     setSelectedPrice(props.product.price_slot?.[0] || null);
   }, [props.product]);
+
+  useEffect(() => {
+    if (cartData.length > 0) {
+      const cartItem = cartData.find(
+        (f) =>
+          f._id === productsId?._id &&
+          f.price_slot?.our_price === selectedPrice?.our_price
+      );
+
+      if (cartItem) {
+        setIsInCart(true);
+        setAvailableQty(cartItem.qty);
+      } else {
+        setIsInCart(false);
+        setAvailableQty(0);
+      }
+    } else {
+      setIsInCart(false);
+      setAvailableQty(0);
+    }
+  }, [cartData, productsId, selectedPrice]);
+
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem("favorites");
+    if (storedFavorites) {
+      setFavorite(JSON.parse(storedFavorites));
+    }
+  }, []);
+
+  // Fetch authenticated product data on client side
+  useEffect(() => {
+    console.log("useEffect check:", {
+      isAuthenticated,
+      userId: user?._id,
+      routerId: router?.query?.id,
+      shouldFetch: isAuthenticated && user?._id && router?.query?.id
+    });
+    
+    if (isAuthenticated && user?._id && router?.query?.id) {
+      fetchAuthenticatedProductData();
+    }
+  }, [isAuthenticated, user, router?.query?.id]);
+
+  // Also try to fetch when user context changes
+  useEffect(() => {
+    if (user?._id && router?.query?.id) {
+      console.log("User loaded, fetching product data...");
+      fetchAuthenticatedProductData();
+    }
+  }, [user?._id, router?.query?.id]);
+
+  const fetchAuthenticatedProductData = async () => {
+    try {
+      console.log("=== Frontend Debug ===");
+      console.log("User:", user);
+      console.log("User ID:", user?._id);
+      console.log("User documentVerified:", user?.documentVerified);
+      
+      let url = `getProductByslug/${router?.query?.id}`;
+      if (user?._id) {
+        url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
+      }
+      
+      console.log("API URL:", url);
+      console.log("Token from localStorage:", localStorage.getItem("token"));
+      
+      const res = await Api("get", url, "", router);
+      console.log("API Response:", res);
+      
+      if (res?.data) {
+        console.log("Authenticated product data:", res.data);
+        console.log("Price slots:", res.data?.price_slot);
+        
+        // Update product data with authenticated response (includes price_slot)
+        setProductsId(res.data);
+        setPriceSlote(res.data?.price_slot || []);
+        setSelectedPrice(res.data?.price_slot?.[0] || null);
+        setProductReviews(res.data?.reviews || []);
+      }
+    } catch (err) {
+      console.error("Error fetching authenticated product data:", err);
+    }
+  };
+
+  // Show loading while checking authentication - moved after all hooks
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-green"></div>
+      </div>
+    );
+  }
 
   // useEffect(() => {
   //   if (router?.query?.id) {
@@ -98,27 +206,6 @@ function ProductDetails(props) {
   };
 
   console.log("productIds", productsId);
-
-  useEffect(() => {
-    if (cartData.length > 0) {
-      const cartItem = cartData.find(
-        (f) =>
-          f._id === productsId?._id &&
-          f.price_slot?.our_price === selectedPrice?.our_price
-      );
-
-      if (cartItem) {
-        setIsInCart(true);
-        setAvailableQty(cartItem.qty);
-      } else {
-        setIsInCart(false);
-        setAvailableQty(0);
-      }
-    } else {
-      setIsInCart(false);
-      setAvailableQty(0);
-    }
-  }, [cartData, productsId, selectedPrice]);
 
   const handleAddToCart = () => {
     // Check if user is logged in before allowing add to cart
@@ -357,13 +444,6 @@ function ProductDetails(props) {
     );
   };
 
-  useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorite(JSON.parse(storedFavorites));
-    }
-  }, []);
-
   const cartItem = productsId?._id;
   const itemQuantity = cartItem ? cartItem?.qty : 0;
 
@@ -516,7 +596,7 @@ function ProductDetails(props) {
                   </div>
 
                   <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
-                    {priceSlot &&
+                    {priceSlot && priceSlot.length > 0 ? (
                       priceSlot.map((data, i) => {
                         const otherprice = parseFloat(data?.other_price);
                         const ourPrice = parseFloat(data?.our_price);
@@ -557,33 +637,26 @@ function ProductDetails(props) {
                                 {data.value} {data.unit}
                               </p>
                               
-                              {/* Conditional Price Display */}
-                              {user && user._id ? (
-                                <>
-                                  <p className="text-black font-normal text-base pt-1">
-                                    {constant.currency}
-                                    {data?.our_price}
-                                  </p>
-                                  <p className="text-custom-black font-semibold text-sm pt-2">
-                                    {data?.other_price && (
-                                      <span className="text-black font-normal line-through">
-                                        {constant.currency}
-                                        {data?.other_price}
-                                      </span>
-                                    )}
-                                  </p>
-                                </>
-                              ) : (
-                                <div className="pt-1">
-                                  <p className="text-custom-green font-medium text-sm">
-                                    Sign in to view wholesale prices
-                                  </p>
-                                </div>
-                              )}
+                              {/* Use PriceDisplay component for consistent price handling */}
+                              <PriceDisplay
+                                ourPrice={data?.our_price}
+                                otherPrice={data?.other_price}
+                                className="text-black font-normal text-base pt-1"
+                                delClassName="text-black font-normal line-through text-sm"
+                              />
                             </div>
                           </div>
                         );
-                      })}
+                      })
+                    ) : (
+                      <div className="col-span-3 text-center py-4">
+                        <PriceDisplay
+                          ourPrice={null}
+                          otherPrice={null}
+                          showLoginMessage={true}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Verification Message for Unverified Users */}
@@ -745,10 +818,16 @@ export async function getServerSideProps(context) {
   const baseUrl = ConstantsUrl; // example: https://api.bachhoahouston.com
 
   try {
-    // const productRes = await fetch(`${baseUrl}getProductByslug/${id}`);
+    // For server-side rendering, fetch basic product data without authentication
+    // This will not include price_slot for unauthenticated requests
+    const productRes = await fetch(`${baseUrl}getProductByslug/${id}`);
 
-    const productRes = await Api("get", `getProductByslug/${id}`, "", "");
-    const product = productRes.data;
+    if (!productRes.ok) {
+      throw new Error('Product not found');
+    }
+
+    const productData = await productRes.json();
+    const product = productData.data;
 
     const relatedRes = await fetch(
       `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`

@@ -19,12 +19,49 @@ export default function Home(props) {
   const [user] = useContext(userContext);
   const router = useRouter();
   const [setFavorite] = useContext(favoriteProductContext);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check authentication immediately
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userDetail = localStorage.getItem("userDetail");
+      const token = localStorage.getItem("token");
+      
+      if (!userDetail || !token) {
+        // Only redirect if user is not authenticated
+        router.replace("/signIn");
+        return;
+      } else {
+        // User is authenticated, allow access to home page
+        setIsAuthenticated(true);
+      }
+      setIsLoading(false);
+    }
+  }, [router]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    fetchFavorite();
-  }, []);
+    if (isAuthenticated) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        fetchFavorite();
+      }
+    }
+  }, [isAuthenticated]);
+
+  // Show loading only while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-green"></div>
+      </div>
+    );
+  }
+
+  // If not authenticated, don't render anything (redirect will happen)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const fetchFavorite = async () => {
     // props.loader(true);
@@ -88,6 +125,7 @@ export default function Home(props) {
 function BestSeller(props) {
   const router = useRouter();
   const { t } = useTranslation();
+  const [user] = useContext(userContext);
 
   const [category, setCategory] = useState([]);
   const [productList, setProductList] = useState([]);
@@ -97,14 +135,28 @@ function BestSeller(props) {
   const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
 
+  // Check if user is authenticated
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      const hasAuth = user?._id || user?.token || token;
+      setIsAuthenticated(!!hasAuth);
+    }
+  }, [user]);
+
   useEffect(() => {
     async function fetchData() {
       const cat = await Api("get", "getCategory", null, router);
       setCategory(cat.data || []);
-      fetchProducts(1, true);
+      // Only fetch products if user is authenticated
+      if (isAuthenticated) {
+        fetchProducts(1, true);
+      }
     }
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   const fetchProducts = async (pageNum, reset = false) => {
     try {
@@ -272,20 +324,34 @@ function BestSeller(props) {
       </div>
 
       <div className="grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto w-full">
-        {productList.length > 0 ? (
-          productList.map((item, i) => (
-            <GroceryCatories
-              loader={props.loader}
-              toaster={props.toaster}
-              key={i}
-              item={item}
-              i={i}
-              url={`/product-details/${item?.slug}`}
-            />
-          ))
+        {isAuthenticated ? (
+          productList.length > 0 ? (
+            productList.map((item, i) => (
+              <GroceryCatories
+                loader={props.loader}
+                toaster={props.toaster}
+                key={i}
+                item={item}
+                i={i}
+                url={`/product-details/${item?.slug}`}
+              />
+            ))
+          ) : (
+            <div className="col-span-6 flex justify-center text-[16px] text-gray-500 min-h-[200px]">
+              {t("No products available")}.
+            </div>
+          )
         ) : (
-          <div className="col-span-6 flex justify-center text-[16px] text-gray-500 min-h-[200px]">
-            {t("No products available")}.
+          <div className="col-span-6 flex flex-col items-center justify-center text-center min-h-[300px] space-y-4">
+            <div className="text-gray-500 text-lg">
+              {t("Please sign in to view products")}
+            </div>
+            <button
+              onClick={() => router.push("/signIn")}
+              className="px-6 py-3 bg-custom-green text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              {t("Sign In")}
+            </button>
           </div>
         )}
       </div>
