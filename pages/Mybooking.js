@@ -240,8 +240,27 @@ function Mybooking(props) {
         props.loader(false);
       })
       .catch((err) => {
-        props.loader(false); // error case me bhi loader off hoga
+        props.loader(false);
         console.error("Failed to fetch PDF", err);
+      });
+  };
+
+  const GeneratePickListPDF = (orderId, id) => {
+    props.loader(true);
+
+    const data = {
+      orderId: orderId,
+      id: id,
+      lang: lang,
+    };
+
+    ApiGetPdf("createpicklist", data, router)
+      .then(() => {
+        props.loader(false);
+      })
+      .catch((err) => {
+        props.loader(false);
+        console.error("Failed to fetch Pick List PDF", err);
       });
   };
 
@@ -287,13 +306,21 @@ function Mybooking(props) {
                             {key + 1}
                           </div>
                         </div>
-                        <div className="flex">
+                        <div className="flex gap-2">
                           {/* <Invoice order={booking} /> */}
                           <MdFileDownload
-                            className="text-xl text-black"
+                            className="text-xl text-black cursor-pointer"
                             onClick={() =>
                               GeneratePDF(booking._id, booking.orderId)
                             }
+                            title="Download Invoice"
+                          />
+                          <MdFileDownload
+                            className="text-xl text-green-600 cursor-pointer"
+                            onClick={() =>
+                              GeneratePickListPDF(booking._id, booking.orderId)
+                            }
+                            title="Download Pick List"
                           />
                           <button
                             onClick={() => toggleBooking(booking._id)}
@@ -455,12 +482,22 @@ function Mybooking(props) {
                             }
                           })()}
                           {/* <Invoice order={booking} /> */}
-                          <MdFileDownload
-                            className="text-xl text-black"
-                            onClick={() =>
-                              GeneratePDF(booking._id, booking.orderId)
-                            }
-                          />
+                          <div className="flex gap-2">
+                            {/* <MdFileDownload
+                              className="text-xl text-black cursor-pointer"
+                              onClick={() =>
+                                GeneratePDF(booking._id, booking.orderId)
+                              }
+                              title="Download Invoice"
+                            /> */}
+                            <MdFileDownload
+                              className="text-xl text-green-600 cursor-pointer"
+                              onClick={() =>
+                                GeneratePickListPDF(booking._id, booking.orderId)
+                              }
+                              title="Download Pick List"
+                            />
+                          </div>
                           <button
                             onClick={() => toggleBooking(booking._id)}
                             className="p-1 rounded-full hover:bg-gray-200"

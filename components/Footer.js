@@ -14,7 +14,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="py-10 bg-orange-200 text-black font-sans rounded-tl-[50px] rounded-tr-[50px] "
+      className="py-10 bg-[#FFF0dc] text-black font-sans rounded-tl-[50px] rounded-tr-[50px] "
       role="contentinfo"
       aria-label="Website Footer"
     >
@@ -25,7 +25,7 @@ const Footer = () => {
               alt="Bach Hoa Houston grocery pickup logo"
               className="mb-4 cursor-pointer "
               fill
-              src="/logo-bachahoustan.png"
+              src="/newlogo.jpeg"
               priority
             />
           </Link>

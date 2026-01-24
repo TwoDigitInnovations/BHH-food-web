@@ -653,6 +653,15 @@ function Cart(props) {
     const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
 
+    if (!cartDetails || cartDetails.length === 0) {
+      props.loader(false);
+      props.toaster({
+        type: "error",
+        message: "Cart is empty. Please add items to cart before checkout.",
+      });
+      return;
+    }
+
     const lineItems = cartDetails.map((item) => ({
       quantity: item.qty || 1,
       price_data: {
@@ -688,7 +697,20 @@ function Cart(props) {
       isOnce: checkoutData?.isOnce,
       isPickupOrder: checkoutData?.isOrderPickup?.toString() || "false",
       isCurbside: checkoutData?.isDriveUp?.toString() || "false",
+      isLocalDelivery: checkoutData?.isLocalDelivery?.toString() || "false",
+      isShipmentDelivery: checkoutData?.isShipmentDelivery?.toString() || "false",
     };
+
+    // Validate address for local delivery
+    const isLocalDelivery = checkoutData?.isLocalDelivery;
+    if (isLocalDelivery && (!localAddress?.address || !localAddress?.zipcode)) {
+      props.loader(false);
+      props.toaster({
+        type: "error",
+        message: "Please provide a complete delivery address for local delivery orders",
+      });
+      return;
+    }
 
     const body = {
       line_items: lineItems,
@@ -697,11 +719,11 @@ function Cart(props) {
         name: user?.name,
         phone: user?.phone,
         address: {
-          line1: profileData?.Local_address?.address,
-          city: profileData?.Local_address?.city,
-          state: profileData?.Local_address?.state,
-          postal_code: profileData?.Local_address?.zipcode || "77072",
-          country: profileData?.Local_address?.country,
+          line1: localAddress?.address || profileData?.Local_address?.address,
+          city: localAddress?.city || profileData?.Local_address?.city,
+          state: localAddress?.state || profileData?.Local_address?.state,
+          postal_code: localAddress?.zipcode || profileData?.Local_address?.zipcode || "77072",
+          country: localAddress?.country || profileData?.Local_address?.country || "US",
         },
       },
       metadata,
@@ -728,6 +750,12 @@ function Cart(props) {
     // props.loader(true);
     try {
       props.loader(true);
+      console.log("Sending checkout session data:", {
+        metadata: metadata,
+        customer_data: body.customer_data,
+        line_items_count: lineItems.length,
+        isLocalDelivery: checkoutData?.isLocalDelivery
+      });
       const res = await Api("post", "create-checkout-session", body, router);
       props.loader(false);
 
@@ -744,9 +772,12 @@ function Cart(props) {
       }
     } catch (error) {
       props.loader(false);
+      console.error("Checkout session error:", error);
       props.toaster({
         type: "error",
         message:
+          error?.response?.data?.error || 
+          error?.data?.error || 
           error?.message ||
           "Something went wrong while creating checkout session",
       });
