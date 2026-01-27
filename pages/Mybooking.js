@@ -308,13 +308,13 @@ function Mybooking(props) {
                         </div>
                         <div className="flex gap-2">
                           {/* <Invoice order={booking} /> */}
-                          <MdFileDownload
+                          {/* <MdFileDownload
                             className="text-xl text-black cursor-pointer"
                             onClick={() =>
                               GeneratePDF(booking._id, booking.orderId)
                             }
                             title="Download Invoice"
-                          />
+                          /> */}
                           <MdFileDownload
                             className="text-xl text-green-600 cursor-pointer"
                             onClick={() =>
