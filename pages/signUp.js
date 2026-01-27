@@ -344,7 +344,7 @@ const SignUp = (props) => {
 
               <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                 <div className="relative flex items-center">
-                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] whitespace-nowrap">
                     {t("First Name")}
                   </label>
                   <input
@@ -354,7 +354,7 @@ const SignUp = (props) => {
                     value={userDetail.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                    className="px-4 py-3 bg-white w-full text-[12px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
                     required
                   />
                 </div>
@@ -367,7 +367,7 @@ const SignUp = (props) => {
 
               <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                 <div className="relative flex items-center">
-                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] whitespace-nowrap">
                     {t("Last Name")}
                   </label>
                   <input
@@ -377,7 +377,7 @@ const SignUp = (props) => {
                     value={userDetail.lastname}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                    className="px-4 py-3 bg-white w-full text-[12px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
                     required
                   />
                 </div>
@@ -390,7 +390,7 @@ const SignUp = (props) => {
 
               <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                 <div className="relative flex items-center">
-                  <label className="text-gray-800 text-[14px] md:text-[18px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">
+                  <label className="text-gray-800 text-[12px] md:text-[18px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] whitespace-nowrap">
                     {t("Email")}
                   </label>
                   <input
@@ -400,7 +400,7 @@ const SignUp = (props) => {
                     value={userDetail.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                    className="px-4 py-3 bg-white w-full text-[12px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
                     required
                   />
                 </div>
@@ -413,7 +413,7 @@ const SignUp = (props) => {
 
               <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                 <div className="relative flex items-center">
-                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] whitespace-nowrap">
                     {t("Mobile Number")}
                   </label>
                   <input
@@ -424,7 +424,7 @@ const SignUp = (props) => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     maxLength={10}
-                    className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl outline-none text-[16px] text-black md:text-[18px]"
+                    className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl outline-none text-[12px] text-black md:text-[18px]"
                     required
                   />
                 </div>
@@ -437,7 +437,7 @@ const SignUp = (props) => {
 
               <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                 <div className="relative flex items-center">
-                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                  <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] whitespace-nowrap">
                     {t("Password")}
                   </label>
                   <input
@@ -447,7 +447,7 @@ const SignUp = (props) => {
                     value={userDetail.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl outline-none text-[16px] text-black md:text-[18px]"
+                    className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl outline-none text-[12px] text-black md:text-[18px]"
                     required
                   />
                   <div
@@ -476,10 +476,10 @@ const SignUp = (props) => {
                     name="isBusinessAccount"
                     checked={isBusinessAccount}
                     onChange={handleChange}
-                    className="w-5 h-5 text-custom-green bg-white border-2 border-gray-300 rounded focus:ring-custom-green focus:ring-2"
+                    className="w-5 h-5 text-custom-green bg-white border-2 border-gray-300 rounded focus:ring-custom-green focus:ring-2 flex-shrink-0"
                     required
                   />
-                  <label className="text-gray-800 text-[14px] md:text-[16px] font-medium">
+                  <label className="text-gray-800 text-[12px] md:text-[16px] font-medium">
                     {t("This is a business account")} *
                   </label>
                 </div>
@@ -496,7 +496,7 @@ const SignUp = (props) => {
                   {/* Business Type Dropdown */}
                   <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                     <div className="relative flex items-center">
-                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px] z-10">
+                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] z-10 whitespace-nowrap">
                         {t("Business Type")} *
                       </label>
                       <select
@@ -504,7 +504,7 @@ const SignUp = (props) => {
                         value={userDetail.businessType}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                        className="px-4 py-3 bg-white w-full text-[12px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none appearance-none"
                         required
                       >
                         <option value="">{t("Select Business Type")}</option>
@@ -516,6 +516,11 @@ const SignUp = (props) => {
                         <option value="mealprep">{t("Meal Prep / Ghost Kitchen")}</option>
                         <option value="homebased">{t("Home-Based Food Business")}</option>
                       </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg className="w-4 h-4 fill-current text-gray-400" viewBox="0 0 20 20">
+                          <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+                        </svg>
+                      </div>
                     </div>
                     {errors.businessType && (
                       <p className="mt-1 text-red-500 text-xs">
@@ -527,7 +532,7 @@ const SignUp = (props) => {
                   {/* Legal Business Name - Optional */}
                   <div className="relative flex flex-col w-full md:w-[80%] mb-6 md:mb-5">
                     <div className="relative flex items-center">
-                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px]">
+                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] whitespace-nowrap">
                         {t("Legal Business Name")}
                       </label>
                       <input
@@ -537,7 +542,7 @@ const SignUp = (props) => {
                         value={userDetail.legalBusinessName}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className="px-4 py-3 bg-white w-full text-[14px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
+                        className="px-4 py-3 bg-white w-full text-[12px] md:text-[16px] border-2 border-black rounded-xl text-black outline-none"
                       />
                     </div>
                     {errors.legalBusinessName && (
@@ -550,7 +555,7 @@ const SignUp = (props) => {
                   {/* Reseller Permit Upload - Optional */}
                   <div className="relative flex flex-col w-full md:w-[80%] mb-10 md:mb-8">
                     <div className="relative flex items-center">
-                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[14px] md:text-[18px] z-10">
+                      <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[12px] md:text-[18px] z-10 whitespace-nowrap">
                         {t("Reseller Permit Upload")}
                       </label>
                       <div className="relative w-full">
@@ -563,12 +568,12 @@ const SignUp = (props) => {
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
                         <div className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl flex items-center justify-between">
-                          <span className="text-[14px] md:text-[16px] text-gray-500">
+                          <span className="text-[12px] md:text-[16px] text-gray-500 truncate flex-1 mr-2">
                             {userDetail.resellerPermit ? userDetail.resellerPermit.name : "No file chosen"}
                           </span>
                           <button
                             type="button"
-                            className="ml-4 py-2 px-4 rounded-full border-0 text-sm font-semibold bg-custom-green text-white cursor-pointer hover:bg-green-700"
+                            className="ml-2 py-2 px-3 rounded-full border-0 text-xs md:text-sm font-semibold bg-custom-green text-white cursor-pointer hover:bg-green-700 flex-shrink-0"
                           >
                             Choose File
                           </button>
@@ -580,7 +585,7 @@ const SignUp = (props) => {
                         {errors.resellerPermit}
                       </p>
                     )}
-                    <p className="mt-1 text-gray-500 text-xs">
+                    <p className="mt-1 text-gray-500 text-xs leading-relaxed">
                       Upload reseller permit or tax exemption certificate (PDF, JPG, PNG - Max 5MB)
                     </p>
                   </div>
@@ -600,7 +605,7 @@ const SignUp = (props) => {
                       required
                     />
                     <div className="flex flex-col flex-1">
-                      <span className="text-gray-800 text-[12px] md:text-[14px] leading-relaxed">
+                      <span className="text-gray-800 text-[11px] md:text-[14px] leading-relaxed break-words">
                         {t("By clicking Submit you agree with our Terms and Conditions and Privacy Policy. Prepayment required. No net terms offered.")}
                       </span>
                     </div>
@@ -614,16 +619,16 @@ const SignUp = (props) => {
                 
                 <button
                   type="submit"
-                  className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
+                  className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[14px] md:text-[20px] bg-custom-green focus:outline-none"
                 >
                   {t("Submit")}
                 </button>
               </div>
 
-              <p className="text-[14px] text-[#A7A9AA]  text-center mb-6 mt-2">
+              <p className="text-[12px] text-[#A7A9AA] text-center mb-6 mt-2">
                 {t("Already have an account?")}
                 <span
-                  className="text-custom-green text-[14px] font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer"
+                  className="text-custom-green text-[12px] font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer"
                   onClick={() => router.push("/signIn")}
                 >
                   {t("Sign in")}
@@ -648,13 +653,13 @@ const SignUp = (props) => {
                 />
               </div>
 
-              <div className="mt-6 relative  w-[170px]  h-14 mb-10 ">
+              <div className="mt-6 relative  w-[170px]  h-24 mb-10 ">
                 <Link href="/" aria-label="Go to homepage">
                   <Image
                     alt="Bach Hoa Houston grocery pickup logo"
                     className="mb-4 cursor-pointer "
                     fill
-                    src="/newlogo.jpeg"
+                    src="/newwlogo.png"
                     priority
                   />
                 </Link>

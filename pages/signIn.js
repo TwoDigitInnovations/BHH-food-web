@@ -256,13 +256,13 @@ const SignIn = (props) => {
                 />
               </div>
 
-              <div className="mt-6 relative  w-[170px]  h-14 mb-10 ">
+              <div className="mt-6 relative  w-[170px]  h-24 mb-10 ">
                 <Link href="/" aria-label="Go to homepage">
                   <Image
                     alt="Bach Hoa Houston grocery pickup logo"
                     className="mb-4 cursor-pointer "
                     fill
-                    src="/newlogo.jpeg"
+                    src="/newwlogo.png"
                     priority
                   />
                 </Link>

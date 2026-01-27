@@ -19,13 +19,13 @@ const Footer = () => {
       aria-label="Website Footer"
     >
       <div className="container mx-auto xl:max-w-7xl border-b-[2px] w-[90%] border-b-gray-500  pb-8">
-        <div className="relative md:w-[200px] w-[170px] md:h-16 h-14 mb-5 ">
+        <div className="relative md:w-[200px] w-[170px] md:h-24 h-22 mb-5 ">
           <Link href="/" aria-label="Go to homepage">
             <Image
               alt="Bach Hoa Houston grocery pickup logo"
               className="mb-4 cursor-pointer "
               fill
-              src="/newlogo.jpeg"
+              src="/newwlogo.png"
               priority
             />
           </Link>
@@ -171,7 +171,7 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-left text-sm md:text-base text-gray-700">
             <p>
-              © {new Date().getFullYear()} <span className="font-semibold text-black">Bach Hoa Houston</span>.{" "}
+              © {new Date().getFullYear()} <span className="font-semibold text-black">BHH FOOD</span>.{" "}
               {t("All rights reserved")}
             </p>
           </div>

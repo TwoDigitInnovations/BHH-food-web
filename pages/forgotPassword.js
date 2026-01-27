@@ -285,7 +285,7 @@ const forgotPassword = (props) => {
                                         alt="Bach Hoa Houston grocery pickup logo"
                                         className="mb-4 cursor-pointer "
                                         fill
-                                        src="/newlogo.jpeg"
+                                        src="/newwlogo.png"
                                         priority
                                     />
                                 </Link>
