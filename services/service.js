@@ -1,6 +1,6 @@
 import axios from "axios";
-  // export const ConstantsUrl = "http://localhost:8000/v1/api/";
-   export const ConstantsUrl = "https://api.bhhfood.com/v1/api/";
+  //  export const ConstantsUrl = "http://localhost:8000/v1/api/";
+    export const ConstantsUrl = "https://api.bhhfood.com/v1/api/";
 
 function Api(method, url, data, router, params) {
   return new Promise(function (resolve, reject) {
@@ -103,7 +103,7 @@ function ApiGetPdf(url, data, router, params) {
         const fileURL = window.URL.createObjectURL(file);
         const link = document.createElement("a");
         link.href = fileURL;
-        link.setAttribute("download", `bachhoahouston-invoice-${data.id}`);
+        link.setAttribute("download", `bhhfood-invoice-${data.id}`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

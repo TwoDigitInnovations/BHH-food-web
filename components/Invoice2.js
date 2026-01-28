@@ -84,26 +84,28 @@ const Invoice = ({ order }) => {
     await new Promise((res) => setTimeout(res, 500));
 
     try {
-      // Create a temporary container with clean styles
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'fixed';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '0';
-      tempContainer.innerHTML = input.innerHTML;
-      document.body.appendChild(tempContainer);
-
-      // render whole invoice to a single canvas
-      const canvas = await html2canvas(tempContainer, { 
+      // render whole invoice to a single canvas with oklch fix
+      const canvas = await html2canvas(input, { 
         scale: 2, 
         useCORS: true,
         logging: false,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: '#ffffff',
-        foreignObjectRendering: false
+        onclone: (clonedDoc) => {
+          // Force all elements to use standard colors
+          const allElements = clonedDoc.querySelectorAll('*');
+          allElements.forEach(el => {
+            const computedStyle = window.getComputedStyle(el);
+            // Override any oklch colors with fallback
+            if (computedStyle.color && computedStyle.color.includes('oklch')) {
+              el.style.color = '#000000';
+            }
+            if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('oklch')) {
+              el.style.backgroundColor = '#ffffff';
+            }
+          });
+        }
       });
-
-      // Remove temp container
-      document.body.removeChild(tempContainer);
 
     const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth(); // mm
@@ -186,8 +188,8 @@ const Invoice = ({ order }) => {
 
     pdf.save(`Invoice-${order?.orderId || Date.now()}.pdf`);
   } catch (error) {
-    console.error("Error generating PDF:", error);
-    alert("Error generating PDF. Please try again.");
+    console.error("PDF Generation Error:", error);
+    alert("Unable to generate PDF. Please try again or contact support.");
   }
 };
 
@@ -314,12 +316,17 @@ const Invoice = ({ order }) => {
       <div
         ref={invoiceRef}
         style={{
+          // position: "absolute",
+          // top: "-9999px",
+          // left: "-9999px",
           position: "fixed",
           top: 0,
           left: "-200vw",
           width: "800px",
           zIndex: -1,
+          // opacity: 0,
           pointerEvents: "none",
+
           background: "white",
           padding: "40px",
           color: "black",
@@ -378,11 +385,12 @@ const Invoice = ({ order }) => {
         </div>
         <div
           style={{
-            width: "400px",
-            height: "150px",
+            width: "400px", // fixed width
+            height: "150px", // fixed height
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            // optional: spacing inside
           }}
         >
           <Barcode value={order.orderId} />
@@ -595,32 +603,32 @@ const Invoice = ({ order }) => {
             borderTop: "1px solid #e5e7eb",
             paddingTop: "16px",
             paddingLeft: "50%",
-            gap: "32px",
+            gap: "32px", // spacing between left and right columns
           }}
         >
           {/* Right Side - Totals */}
           <div style={{ flex: 1 }}>
             {[
-              { label: "Subtotal", value: `${total}` },
+              { label: "Subtotal", value: `$${total}` },
               {
                 label: "Discount",
-                value: `${parseFloat(order.discount || 0).toFixed(2)}`,
+                value: `$${parseFloat(order.discount || 0).toFixed(2)}`,
               },
               {
                 label: "Delivery tip",
-                value: `${parseFloat(order.Deliverytip || 0).toFixed(2)}`,
+                value: `$${parseFloat(order.Deliverytip || 0).toFixed(2)}`,
               },
               {
                 label: "Delivery Charges",
-                value: `${parseFloat(order.deliveryfee || 0).toFixed(2)}`,
+                value: `$${parseFloat(order.deliveryfee || 0).toFixed(2)}`,
               },
               {
                 label: "Service Fee",
-                value: `${parseFloat(order.serviceFee || 0).toFixed(2)}`,
+                value: `$${parseFloat(order.serviceFee || 0).toFixed(2)}`,
               },
               {
                 label: "Total Tax",
-                value: `${parseFloat(order.totalTax || 0).toFixed(2)}`,
+                value: `$${parseFloat(order.totalTax || 0).toFixed(2)}`,
               },
             ].map((item, index) => (
               <div
