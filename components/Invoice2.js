@@ -32,7 +32,6 @@ const Invoice = ({ order }) => {
   const orderDateTime = formatOrderDateTime(order?.createdAt);
   console.log(orderDateTime);
 
-  const website = "www.bhhfood.com";
   const customerName =
     `${order?.Local_address?.name || ""} ${
       order?.Local_address?.lastname || ""
@@ -345,11 +344,28 @@ const Invoice = ({ order }) => {
         >
           <div>
             <h1
-              style={{ fontSize: "2rem", fontWeight: "bold", color: "#f38529" }}
+              style={{ 
+                fontSize: "2rem", 
+                fontWeight: "bold", 
+                color: "#f38529",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+              onClick={() => window.open("https://www.bhhfood.com", "_blank")}
             >
               BHH FOOD
             </h1>
-            <p style={{ fontSize: "0.875rem" }}>{website}</p>
+            <p 
+              style={{ 
+                fontSize: "0.875rem",
+                cursor: "pointer",
+                color: "#f38529",
+                textDecoration: "underline"
+              }}
+              onClick={() => window.open("https://www.bhhfood.com", "_blank")}
+            >
+              Shop Everyday Essentials at BHH FOOD | www.bhhfood.com
+            </p>
           </div>
           <div style={{ textAlign: "right" }}>
             <p style={{ fontSize: "1.2rem", color: "#f38529" }}>
@@ -383,18 +399,21 @@ const Invoice = ({ order }) => {
             )}
           </div>
         </div>
+        
+        {/* Barcode section - moved to appear before BILL TO */}
         <div
           style={{
             width: "400px", // fixed width
             height: "150px", // fixed height
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-start", // Align to left
             alignItems: "center",
-            // optional: spacing inside
+            marginBottom: "1rem", // Add spacing before BILL TO
           }}
         >
           <Barcode value={order.orderId} />
         </div>
+        
         <div style={{ marginBottom: "1.5rem", display: "grid" }}>
           <h2
             style={{
