@@ -20,7 +20,7 @@ function Api(method, url, data, router, params) {
         resolve(res.data);
       },
       (err) => {
-
+// 
         if (err.response) {
           const status = err.response.status;
           const message = err.response?.data?.message || "";
