@@ -809,6 +809,30 @@ function Mybooking(props) {
                         </div>
                       </div>
                     ))}
+                    
+                    {/* Total Row */}
+                    <div className="flex items-center p-2 bg-gray-100 border-t border-gray-200 font-semibold">
+                      <div className="flex-shrink-0 w-20 h-20 flex items-center justify-center">
+                        <span className="text-gray-600 font-bold">Total</span>
+                      </div>
+                      <div className="ml-4 flex-grow flex justify-between items-center">
+                        <div>
+                          <p className="text-gray-800 font-semibold">
+                            {t("Total Items")}: {booking.productDetail.length}
+                          </p>
+                          <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
+                            <span className="mr-4">
+                              {t("Total Quantity")}: {booking.productDetail.reduce((sum, product) => sum + (product.qty || 1), 0)}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-semibold text-gray-800">
+                            ${((Number(booking.total || 0)) + Number(booking.totalTax || 0))?.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Order Total */}
