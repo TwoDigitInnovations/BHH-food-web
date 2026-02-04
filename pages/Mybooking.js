@@ -233,6 +233,7 @@ function Mybooking(props) {
       orderId: orderId,
       id: id,
       lang: lang,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Add user's timezone
     };
 
     ApiGetPdf("createinvoice", data, router)
