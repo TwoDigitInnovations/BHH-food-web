@@ -287,6 +287,24 @@ function Mybooking(props) {
                           <div className="bg-custom-green text-white rounded-full h-8 w-8 flex items-center justify-center font-semibold text-sm">
                             {key + 1}
                           </div>
+                          {/* Delivery Method Badge - Next to number with dark green */}
+                          {booking?.isShipmentDelivery ? (
+                            <span className="px-3 py-1.5 bg-custom-green text-white rounded-full text-xs font-medium">
+                              {t("Shipment Delivery")}
+                            </span>
+                          ) : booking?.isLocalDelivery ? (
+                            <span className="px-3 py-1.5 bg-custom-green text-white rounded-full text-xs font-medium">
+                              {t("Local Delivery")}
+                            </span>
+                          ) : booking?.isDriveUp ? (
+                            <span className="px-3 py-1.5 bg-custom-green text-white rounded-full text-xs font-medium">
+                              {t("Curbside Pickup")}
+                            </span>
+                          ) : booking?.isOrderPickup ? (
+                            <span className="px-3 py-1.5 bg-custom-green text-white rounded-full text-xs font-medium">
+                              {t("In-store Pickup")}
+                            </span>
+                          ) : null}
                         </div>
                         <div className="flex gap-2">
                           <MdFileDownload
